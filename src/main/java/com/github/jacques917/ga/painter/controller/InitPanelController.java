@@ -1,6 +1,7 @@
 package com.github.jacques917.ga.painter.controller;
 
 import com.github.jacques917.ga.painter.events.ImageLoadedEvent;
+import com.github.jacques917.ga.painter.events.StartAlgorithmEvent;
 import com.github.jacques917.ga.painter.model.AlgorithmDataHolder;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -8,6 +9,7 @@ import io.vavr.control.Try;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,8 @@ public class InitPanelController {
     private AlgorithmDataHolder algorithmDataHolder;
     @Inject
     private EventBus eventBus;
+    @FXML
+    private Button startAlgorithmButton;
 
     @FXML
     protected void loadImageButtonHandler(ActionEvent event) {
@@ -38,7 +42,8 @@ public class InitPanelController {
 
     @FXML
     protected void startAlgorithmButtonHandler() {
-        log.info("startAlgorithmButtonHandler");
+        startAlgorithmButton.setDisable(true);
+        eventBus.post(new StartAlgorithmEvent());
     }
 
     private Optional<File> processSelectFileDialog(ActionEvent event) {
@@ -57,8 +62,8 @@ public class InitPanelController {
     }
 
     private Window getCurrentWindow(ActionEvent event) {
-         Node targetNode = (Node) event.getTarget();
-         return targetNode.getScene().getWindow();
+        Node targetNode = (Node) event.getTarget();
+        return targetNode.getScene().getWindow();
     }
 
 }

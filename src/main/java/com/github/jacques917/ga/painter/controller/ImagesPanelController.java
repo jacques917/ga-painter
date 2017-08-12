@@ -5,6 +5,7 @@ import com.github.jacques917.ga.painter.model.AlgorithmDataHolder;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,7 +27,11 @@ public class ImagesPanelController {
     }
 
     @Subscribe
-    public void imageLoadedEvent(ImageLoadedEvent event) {
+    public void handleImageLoadedEvent(ImageLoadedEvent event) {
+        Platform.runLater(this::updateImage);
+    }
+
+    private void updateImage() {
         ofNullable(algorithmDataHolder.getSourceImage())
                 .map(ByteArrayInputStream::new)
                 .map(Image::new)

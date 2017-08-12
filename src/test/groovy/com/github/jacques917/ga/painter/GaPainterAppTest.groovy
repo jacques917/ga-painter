@@ -5,5 +5,4 @@ import spock.lang.Specification
 class GaPainterAppTest extends Specification {
 
 
-
 }
