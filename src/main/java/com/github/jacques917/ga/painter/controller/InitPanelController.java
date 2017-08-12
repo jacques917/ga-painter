@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.UUID;
 
 @Slf4j
 public class InitPanelController {
@@ -25,17 +24,12 @@ public class InitPanelController {
     @Inject
     private EventBus eventBus;
 
-
     @FXML
     protected void loadImageButtonHandler(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select source image");
-        File selectedFile = fileChooser.showOpenDialog(getCurrentWindow(event));
+        File selectedFile = processSelectFileDialog(event);
         log.info("Selected file: {}", selectedFile);
         loadFile(selectedFile);
         eventBus.post(new ImageLoadedEvent());
-        algorithmDataHolder.setFilename(UUID.randomUUID().toString());
-        log.info("loadImageButtonHandler");
     }
 
     @FXML
@@ -43,12 +37,18 @@ public class InitPanelController {
         log.info("startAlgorithmButtonHandler");
     }
 
-    private void loadFile(File file) {
+    private File processSelectFileDialog(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select source image");
+        return fileChooser.showOpenDialog(getCurrentWindow(event));
+    }
+
+    private void loadFile(File file) {algorithmDataHolder = null;
         Path imagePath = file.toPath();
-        byte[] imageBytes = Try.of(() -> imagePath)
+        Try.of(() -> imagePath)
                 .mapTry(Files::readAllBytes)
-                .getOrElseThrow(() -> new RuntimeException("Error while loading image"));
-         algorithmDataHolder.setSourceImage(imageBytes);
+                .andThen(algorithmDataHolder::setSourceImage)
+                .onFailure(t -> new RuntimeException("Error while loading image", t));
     }
 
     private Window getCurrentWindow(ActionEvent event) {
