@@ -17,10 +17,9 @@ public class GaPainterApp extends Application {
         GuiceFxLoader guiceLoader = injector.getInstance(GuiceFxLoader.class);
         Parent parent = (Parent) guiceLoader.load("fx/GaPainterApp.fxml");
         Scene scene = new Scene(parent);
-        primaryStage.setTitle("Hello World!");
+        primaryStage.setTitle("GA Painter");
         primaryStage.setScene(scene);
         primaryStage.show();
-
     }
 
     public static void main(String... args) {

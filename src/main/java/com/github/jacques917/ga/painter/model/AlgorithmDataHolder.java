@@ -9,5 +9,6 @@ public class AlgorithmDataHolder {
 
     private Integer counter = 0;
     private String filename;
+    private byte[] sourceImage;
 
 }
