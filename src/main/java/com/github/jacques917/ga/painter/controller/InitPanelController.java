@@ -15,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
 
 @Slf4j
 public class InitPanelController {
@@ -26,10 +29,11 @@ public class InitPanelController {
 
     @FXML
     protected void loadImageButtonHandler(ActionEvent event) {
-        File selectedFile = processSelectFileDialog(event);
-        log.info("Selected file: {}", selectedFile);
-        loadFile(selectedFile);
-        eventBus.post(new ImageLoadedEvent());
+        processSelectFileDialog(event).ifPresent(selectedFile -> {
+            log.info("Selected file: {}", selectedFile);
+            loadFile(selectedFile);
+            eventBus.post(new ImageLoadedEvent());
+        });
     }
 
     @FXML
@@ -37,13 +41,14 @@ public class InitPanelController {
         log.info("startAlgorithmButtonHandler");
     }
 
-    private File processSelectFileDialog(ActionEvent event) {
+    private Optional<File> processSelectFileDialog(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select source image");
-        return fileChooser.showOpenDialog(getCurrentWindow(event));
+        Window currentWindow = getCurrentWindow(event);
+        return ofNullable(fileChooser.showOpenDialog(currentWindow));
     }
 
-    private void loadFile(File file) {algorithmDataHolder = null;
+    private void loadFile(File file) {
         Path imagePath = file.toPath();
         Try.of(() -> imagePath)
                 .mapTry(Files::readAllBytes)
