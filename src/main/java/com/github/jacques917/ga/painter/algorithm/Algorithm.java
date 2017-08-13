@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -23,6 +25,9 @@ class Algorithm {
     private PhenotypeGenerator phenotypeGenerator;
     @Inject
     private PhenotypePainter phenotypePainter;
+    @Inject
+    private RankCalculator rankCalculator;
+
     private List<Phenotype> population;
 
     void initializeAlgorithm() {
@@ -34,14 +39,34 @@ class Algorithm {
     void step() {
         int iteration = algorithmDataHolder.getIteration().incrementAndGet();
         Collections.shuffle(population);
-        drawLeader();
+
+        prepareImageRepresentation();
+        calculateRank();
+
+        electNewLeader();
         log.info("Algorithm step {}", iteration);
+        log.info("Population rank: {}", population.stream().map(Phenotype::getRank).collect(Collectors.toList()));
     }
 
-    private void drawLeader() {
+    private void calculateRank() {
+        Image targetImage = algorithmDataHolder.getSourceImage();
+        population.forEach(phenotype -> calculateRankForPhenotype(targetImage, phenotype));
+    }
+
+    private void calculateRankForPhenotype(Image targetImage, Phenotype phenotype) {
+        double rank = rankCalculator.calculateRank(targetImage, phenotype.getImageRepresentation());
+        phenotype.setRank(rank);
+    }
+
+    private void prepareImageRepresentation() {
+        population.stream()
+                .filter(phenotype -> Objects.isNull(phenotype.getImageRepresentation()))
+                .forEach(phenotype -> phenotype.setImageRepresentation(phenotypePainter.paintPhenotype(phenotype)));
+    }
+
+    private void electNewLeader() {
         Phenotype phenotype = population.stream().findFirst().orElseThrow(() -> new RuntimeException("Empty population"));
-        Image image = phenotypePainter.paintPhenotype(phenotype);
-        algorithmDataHolder.setCurrentLeader(image);
+        algorithmDataHolder.setCurrentLeader(phenotype.getImageRepresentation());
     }
 
 }

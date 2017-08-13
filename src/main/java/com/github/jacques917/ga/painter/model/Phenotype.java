@@ -1,5 +1,6 @@
 package com.github.jacques917.ga.painter.model;
 
+import javafx.scene.image.Image;
 import lombok.Data;
 
 import java.util.List;
@@ -8,5 +9,7 @@ import java.util.List;
 public class Phenotype {
 
     private List<Chromosome> chromosomeList;
+    private Image imageRepresentation;
+    private double rank;
 
 }

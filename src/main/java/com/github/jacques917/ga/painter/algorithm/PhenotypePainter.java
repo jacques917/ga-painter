@@ -16,12 +16,12 @@ import java.util.Optional;
 import static java.util.Optional.ofNullable;
 
 @Singleton
-public class PhenotypePainter {
+class PhenotypePainter {
 
     @Inject
     private AlgorithmDataHolder algorithmDataHolder;
 
-    public Image paintPhenotype(Phenotype phenotype ) {
+    Image paintPhenotype(Phenotype phenotype ) {
         BufferedImage bufferedImage = prepareEmptyBufferedImage();
         Graphics2D graphics2D = bufferedImage.createGraphics();
         phenotype.getChromosomeList()

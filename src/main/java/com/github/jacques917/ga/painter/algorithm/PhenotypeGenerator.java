@@ -16,12 +16,12 @@ import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Singleton
-public class PhenotypeGenerator {
+class PhenotypeGenerator {
 
     @Inject
     private AlgorithmDataHolder algorithmDataHolder;
 
-    public Phenotype createRandomPhenotype() {
+    Phenotype createRandomPhenotype() {
         List<Chromosome> chromosomes = IntStream.range(0, algorithmDataHolder.getPopulationSize())
                 .mapToObj(value -> generateRandomChromosome())
                 .collect(toList());
