@@ -10,6 +10,6 @@ public class Phenotype {
 
     private List<Chromosome> chromosomeList;
     private Image imageRepresentation;
-    private double rank;
+    private Double rank;
 
 }

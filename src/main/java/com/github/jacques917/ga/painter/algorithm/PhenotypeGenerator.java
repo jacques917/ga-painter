@@ -22,7 +22,7 @@ class PhenotypeGenerator {
     private AlgorithmDataHolder algorithmDataHolder;
 
     Phenotype createRandomPhenotype() {
-        List<Chromosome> chromosomes = IntStream.range(0, algorithmDataHolder.getPopulationSize())
+        List<Chromosome> chromosomes = IntStream.range(0, algorithmDataHolder.getChromosomeCount())
                 .mapToObj(value -> generateRandomChromosome())
                 .collect(toList());
         Phenotype phenotype = new Phenotype();

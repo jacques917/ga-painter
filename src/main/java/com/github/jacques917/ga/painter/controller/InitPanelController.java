@@ -10,6 +10,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
@@ -21,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import static java.lang.String.valueOf;
 import static java.util.Optional.ofNullable;
 
 @Slf4j
@@ -34,6 +37,30 @@ public class InitPanelController {
     private Button startAlgorithmButton;
     @FXML
     private Button loadImageButton;
+    @FXML
+    private Label populationSizeLabel;
+    @FXML
+    private Label chromosomeCountLabel;
+    @FXML
+    private Slider populationSizeSlider;
+    @FXML
+    private Slider chromosomeCountSlider;
+
+    @FXML
+    public void initialize() {
+        populationSizeSlider.valueProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    algorithmDataHolder.setPopulationSize(newValue.intValue());
+                    populationSizeLabel.setText(valueOf(algorithmDataHolder.getPopulationSize()));
+                });
+        chromosomeCountSlider.valueProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    algorithmDataHolder.setChromosomeCount(newValue.intValue());
+                    chromosomeCountLabel.setText(valueOf(algorithmDataHolder.getChromosomeCount()));
+                });
+        populationSizeLabel.setText(valueOf(algorithmDataHolder.getPopulationSize()));
+        chromosomeCountLabel.setText(valueOf(algorithmDataHolder.getChromosomeCount()));
+    }
 
     @FXML
     protected void loadImageButtonHandler(ActionEvent event) {
@@ -48,6 +75,9 @@ public class InitPanelController {
     protected void startAlgorithmButtonHandler() {
         startAlgorithmButton.setDisable(true);
         loadImageButton.setDisable(true);
+        populationSizeSlider.setDisable(true);
+        chromosomeCountSlider.setDisable(true);
+
         eventBus.post(new StartAlgorithmEvent());
     }
 

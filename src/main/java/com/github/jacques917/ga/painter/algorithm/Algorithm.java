@@ -13,6 +13,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
@@ -65,7 +66,10 @@ class Algorithm {
     }
 
     private void electNewLeader() {
-        Phenotype phenotype = population.stream().findFirst().orElseThrow(() -> new RuntimeException("Empty population"));
+        Phenotype phenotype = population.stream()
+                .sorted(comparing(Phenotype::getRank))
+                .findFirst().orElseThrow(() -> new RuntimeException("Empty population"));
+        log.info("Leader rank: {}", phenotype.getRank());
         algorithmDataHolder.setCurrentLeader(phenotype.getImageRepresentation());
     }
 

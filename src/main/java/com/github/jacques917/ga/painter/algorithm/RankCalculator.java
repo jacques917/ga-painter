@@ -24,21 +24,21 @@ class RankCalculator {
                 .boxed()
                 .flatMap(x -> IntStream.range(0, height).mapToObj(y -> Tuple.of(x, y)))
                 .map(tuple -> pixelDifference(tuple, targetImagePixelReader, phenotypeRepresentationPixelReader))
-                .mapToInt(Integer::intValue)
+                .mapToDouble(Double::doubleValue)
                 .sum();
     }
 
-    private int pixelDifference(Tuple2<Integer, Integer> coordinates, PixelReader pixelReader1, PixelReader pixelReader2) {
+    private double pixelDifference(Tuple2<Integer, Integer> coordinates, PixelReader pixelReader1, PixelReader pixelReader2) {
         Color pixel1Color = pixelReader1.getColor(coordinates._1, coordinates._2);
         Color pixel2Color = pixelReader2.getColor(coordinates._1, coordinates._2);
         return colorDifference(pixel1Color, pixel2Color);
     }
 
-    private int colorDifference(Color color1, Color color2) {
-        int diffValue = 0;
-        diffValue+=Math.abs(color1.getRed() - color2.getRed());
-        diffValue+=Math.abs(color1.getGreen() - color2.getGreen());
-        diffValue+=Math.abs(color1.getBlue() - color2.getBlue());
+    private double colorDifference(Color color1, Color color2) {
+        double diffValue = 0;
+        diffValue += Math.abs(color1.getRed() - color2.getRed());
+        diffValue += Math.abs(color1.getGreen() - color2.getGreen());
+        diffValue += Math.abs(color1.getBlue() - color2.getBlue());
         return diffValue;
     }
 

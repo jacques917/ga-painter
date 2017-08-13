@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AlgorithmDataHolder {
 
     private int populationSize = 10;
+    private int chromosomeCount = 10;
     private Image sourceImage;
     private Image currentLeader;
     private AtomicInteger iteration = new AtomicInteger(0);

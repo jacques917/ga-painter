@@ -90,7 +90,7 @@ public class AlgorithmRunner {
     private void runAlgorithmStep() {
         if (isRunning.get()) {
             algorithm.step();
-        //    eventBus.post(new AlgorithmStepFinishedEvent());
+            //    eventBus.post(new AlgorithmStepFinishedEvent());
         }
     }
 
