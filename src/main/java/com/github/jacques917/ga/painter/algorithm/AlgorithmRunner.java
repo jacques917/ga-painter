@@ -1,6 +1,6 @@
 package com.github.jacques917.ga.painter.algorithm;
 
-import com.github.jacques917.ga.painter.events.AlgorithmStepFinishedEvent;
+import com.github.jacques917.ga.painter.events.ApplicationClosingEvent;
 import com.github.jacques917.ga.painter.events.PauseAlgorithmEvent;
 import com.github.jacques917.ga.painter.events.ResumeAlgorithmEvent;
 import com.github.jacques917.ga.painter.events.StartAlgorithmEvent;
@@ -11,11 +11,13 @@ import com.google.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 @Slf4j
 @Singleton
@@ -23,33 +25,32 @@ public class AlgorithmRunner {
 
     @Inject
     private Algorithm algorithm;
-    private final AtomicBoolean isRunning = new AtomicBoolean();
+    private final AtomicBoolean isPaused = new AtomicBoolean();
+    private final AtomicBoolean isRunning = new AtomicBoolean(true);
+    private final ReentrantLock lock = new ReentrantLock();
     private final EventBus eventBus;
-    private final ReentrantLock lock;
     private final Condition condition;
+    private final ExecutorService algorithmRunnerExecutor;
 
     @Inject
     public AlgorithmRunner(EventBus eventBus) {
         this.eventBus = eventBus;
         eventBus.register(this);
-        lock = new ReentrantLock();
         condition = lock.newCondition();
+        algorithmRunnerExecutor = Executors.newSingleThreadExecutor();
     }
 
     @Subscribe
     public void handleStartAlgorithmEvent(StartAlgorithmEvent event) {
-        if (!isRunning.compareAndSet(false, true)) {
-            throw new RuntimeException("Algorithm already running");
-        }
         algorithm.initializeAlgorithm();
-        CompletableFuture.runAsync(this::runAlgorithm);
+        CompletableFuture.runAsync(this::runAlgorithm, algorithmRunnerExecutor);
     }
 
     @Subscribe
     public void handlePauseAlgorithmEvent(PauseAlgorithmEvent event) {
         lock.lock();
         try {
-            if (!isRunning.compareAndSet(true, false)) {
+            if (!isPaused.compareAndSet(false, true)) {
                 throw new RuntimeException("Algorithm is not running");
             }
             condition.signalAll();
@@ -62,7 +63,7 @@ public class AlgorithmRunner {
     public void handleResumeAlgorithmEvent(ResumeAlgorithmEvent event) {
         lock.lock();
         try {
-            if (!isRunning.compareAndSet(false, true)) {
+            if (!isPaused.compareAndSet(true, false)) {
                 throw new RuntimeException("Algorithm is not in paused state");
             }
             condition.signalAll();
@@ -71,21 +72,36 @@ public class AlgorithmRunner {
         }
     }
 
+    @Subscribe
+    public void handleApplicationClosingEvent(ApplicationClosingEvent event) {
+        log.info("Stopping algorithm runner thread pool");
+        isRunning.set(false);
+        isPaused.set(false);
+        algorithmRunnerExecutor.shutdownNow();
+    }
+
     private void runAlgorithm() {
-        log.info("start");
-        while (true) {
+        log.info("Starting algorithm");
+        while (isRunning.get()) {
             checkIfPaused();
+            runAlgorithmStep();
+        }
+    }
+
+    private void runAlgorithmStep() {
+        if (isRunning.get()) {
             algorithm.step();
-            eventBus.post(new AlgorithmStepFinishedEvent());
+        //    eventBus.post(new AlgorithmStepFinishedEvent());
         }
     }
 
     private void checkIfPaused() {
-        if (isRunning.get() == FALSE) {
+        if (isPaused.get() == TRUE) {
             lock.lock();
             try {
                 log.info("Pausing execution");
-                condition.awaitUninterruptibly();
+                condition.await();
+            } catch (InterruptedException ignored) {
             } finally {
                 lock.unlock();
             }
