@@ -10,10 +10,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,6 +32,8 @@ public class InitPanelController {
     private EventBus eventBus;
     @FXML
     private Button startAlgorithmButton;
+    @FXML
+    private Button loadImageButton;
 
     @FXML
     protected void loadImageButtonHandler(ActionEvent event) {
@@ -43,6 +47,7 @@ public class InitPanelController {
     @FXML
     protected void startAlgorithmButtonHandler() {
         startAlgorithmButton.setDisable(true);
+        loadImageButton.setDisable(true);
         eventBus.post(new StartAlgorithmEvent());
     }
 
@@ -57,6 +62,8 @@ public class InitPanelController {
         Path imagePath = file.toPath();
         Try.of(() -> imagePath)
                 .mapTry(Files::readAllBytes)
+                .map(ByteArrayInputStream::new)
+                .map(Image::new)
                 .andThen(algorithmDataHolder::setSourceImage)
                 .onFailure(t -> new RuntimeException("Error while loading image", t));
     }

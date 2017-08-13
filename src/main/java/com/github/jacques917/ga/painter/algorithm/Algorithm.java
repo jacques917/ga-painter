@@ -4,8 +4,10 @@ import com.github.jacques917.ga.painter.model.AlgorithmDataHolder;
 import com.github.jacques917.ga.painter.model.Phenotype;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import javafx.scene.image.Image;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -19,6 +21,8 @@ class Algorithm {
     private AlgorithmDataHolder algorithmDataHolder;
     @Inject
     private PhenotypeGenerator phenotypeGenerator;
+    @Inject
+    private PhenotypePainter phenotypePainter;
     private List<Phenotype> population;
 
     void initializeAlgorithm() {
@@ -29,7 +33,15 @@ class Algorithm {
 
     void step() {
         int iteration = algorithmDataHolder.getIteration().incrementAndGet();
+        Collections.shuffle(population);
+        drawLeader();
         log.info("Algorithm step {}", iteration);
+    }
+
+    private void drawLeader() {
+        Phenotype phenotype = population.stream().findFirst().orElseThrow(() -> new RuntimeException("Empty population"));
+        Image image = phenotypePainter.paintPhenotype(phenotype);
+        algorithmDataHolder.setCurrentLeader(image);
     }
 
 }

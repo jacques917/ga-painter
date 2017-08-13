@@ -10,7 +10,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -43,7 +42,7 @@ public class AlgorithmRunner {
     @Subscribe
     public void handleStartAlgorithmEvent(StartAlgorithmEvent event) {
         algorithm.initializeAlgorithm();
-        CompletableFuture.runAsync(this::runAlgorithm, algorithmRunnerExecutor);
+        algorithmRunnerExecutor.submit(this::runAlgorithm);
     }
 
     @Subscribe

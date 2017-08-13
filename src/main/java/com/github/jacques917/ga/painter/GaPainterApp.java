@@ -1,10 +1,8 @@
 package com.github.jacques917.ga.painter;
 
-import com.github.jacques917.ga.painter.algorithm.AlgorithmRunner;
 import com.github.jacques917.ga.painter.configuration.ApplicationModule;
 import com.github.jacques917.ga.painter.configuration.GuiceFxLoader;
 import com.github.jacques917.ga.painter.events.ApplicationClosingEvent;
-import com.github.jacques917.ga.painter.events.PauseAlgorithmEvent;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Guice;
 import com.google.inject.Injector;

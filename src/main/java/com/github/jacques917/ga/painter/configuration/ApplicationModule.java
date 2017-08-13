@@ -1,6 +1,7 @@
 package com.github.jacques917.ga.painter.configuration;
 
 import com.github.jacques917.ga.painter.algorithm.AlgorithmRunner;
+import com.github.jacques917.ga.painter.controller.GuiRefreshScheduler;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Binder;
 import com.google.inject.Module;
@@ -16,6 +17,7 @@ public class ApplicationModule implements Module {
         log.info("Guice module configuration");
         binder.bind(EventBus.class).toInstance(mainEventBus);
         binder.bind(AlgorithmRunner.class).asEagerSingleton();
+        binder.bind(GuiRefreshScheduler.class).asEagerSingleton();
     }
 
 }
