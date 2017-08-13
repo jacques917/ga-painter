@@ -20,7 +20,9 @@ public class Circle implements Chromosome {
     @Override
     public GraphicsData getGraphicsData() {
         Color color = new Color(r,g,b,127); //TODO opacity - random or parameter?
-        Ellipse2D circle = new Ellipse2D.Double(xCoordinate,yCoordinate,radius,radius);
+        int upperLeftCornerX = this.xCoordinate - (radius/2);
+        int upperLeftCornerY = this.yCoordinate - (radius/2);
+        Ellipse2D circle = new Ellipse2D.Double(upperLeftCornerX, upperLeftCornerY,radius,radius);
         return new GraphicsData(circle, color);
     }
 

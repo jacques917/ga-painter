@@ -6,6 +6,7 @@ import com.github.jacques917.ga.painter.model.Circle;
 import com.github.jacques917.ga.painter.model.Phenotype;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -13,6 +14,7 @@ import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
 
+@Slf4j
 @Singleton
 public class PhenotypeGenerator {
 
