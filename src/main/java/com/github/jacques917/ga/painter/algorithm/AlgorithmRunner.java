@@ -1,9 +1,6 @@
 package com.github.jacques917.ga.painter.algorithm;
 
-import com.github.jacques917.ga.painter.events.ApplicationClosingEvent;
-import com.github.jacques917.ga.painter.events.PauseAlgorithmEvent;
-import com.github.jacques917.ga.painter.events.ResumeAlgorithmEvent;
-import com.github.jacques917.ga.painter.events.StartAlgorithmEvent;
+import com.github.jacques917.ga.painter.events.*;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -42,6 +39,8 @@ public class AlgorithmRunner {
     @Subscribe
     public void handleStartAlgorithmEvent(StartAlgorithmEvent event) {
         algorithm.initializeAlgorithm();
+        isRunning.set(true);
+        isPaused.set(false);
         algorithmRunnerExecutor.submit(this::runAlgorithm);
     }
 
@@ -72,6 +71,17 @@ public class AlgorithmRunner {
     }
 
     @Subscribe
+    public void handleRestartAlgorithmEvent(ResetAlgorithmEvent event) {
+        lock.lock();
+        try {
+            isRunning.set(false);
+            condition.signalAll();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Subscribe
     public void handleApplicationClosingEvent(ApplicationClosingEvent event) {
         log.info("Stopping algorithm runner thread pool");
         isRunning.set(false);
@@ -85,6 +95,7 @@ public class AlgorithmRunner {
             checkIfPaused();
             runAlgorithmStep();
         }
+        log.info("Stopping algorithm");
     }
 
     private void runAlgorithmStep() {

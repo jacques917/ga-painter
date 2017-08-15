@@ -8,13 +8,12 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import lombok.extern.slf4j.Slf4j;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Optional;
 
-import static java.util.Optional.ofNullable;
-
+@Slf4j
 @Singleton
 class PhenotypePainter {
 
@@ -31,15 +30,8 @@ class PhenotypePainter {
     }
 
     private BufferedImage prepareEmptyBufferedImage() {
-        Optional<Image> sourceImageOptional = ofNullable(algorithmDataHolder.getSourceImage());
-        int width = sourceImageOptional
-                .map(Image::getWidth)
-                .map(Double::intValue)
-                .orElse(1);
-        int height = sourceImageOptional
-                .map(Image::getHeight)
-                .map(Double::intValue)
-                .orElse(1);
+        int width = algorithmDataHolder.getSourceWidth();
+        int height = algorithmDataHolder.getSourceHeight();
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         setWhiteBackground(bufferedImage);
         return bufferedImage;

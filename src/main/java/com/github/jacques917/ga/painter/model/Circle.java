@@ -1,13 +1,17 @@
 package com.github.jacques917.ga.painter.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Circle implements Chromosome {
 
     private int xCoordinate;

@@ -23,31 +23,32 @@ class PhenotypeGenerator {
 
     Phenotype createRandomPhenotype() {
         List<Chromosome> chromosomes = IntStream.range(0, algorithmDataHolder.getChromosomeCount())
-                .mapToObj(value -> generateRandomChromosome())
+                .mapToObj(value -> new Circle())
+                .map(this::generateRandomChromosome)
                 .collect(toList());
         Phenotype phenotype = new Phenotype();
         phenotype.setChromosomeList(chromosomes);
         return phenotype;
     }
 
-    private Chromosome generateRandomChromosome() {
+    Chromosome generateRandomChromosome(Chromosome chromosome) { //TODO create specialized method for each chromosome implementation
+        Circle circle = (Circle) chromosome;
         double xSize = algorithmDataHolder.getSourceImage().getWidth();
         double ySize = algorithmDataHolder.getSourceImage().getHeight();
         double maxRadius = (xSize + ySize) / 2; //TODO what should be there?
         int x = ThreadLocalRandom.current().nextInt(0, (int) xSize);
+        circle.setXCoordinate(x);
         int y = ThreadLocalRandom.current().nextInt(0, (int) ySize);
+        circle.setYCoordinate(y);
         int radius = ThreadLocalRandom.current().nextInt(1, (int) maxRadius); //TODO min radius?
+        circle.setRadius(radius);
         int r = ThreadLocalRandom.current().nextInt(0, 255);
+        circle.setR(r);
         int g = ThreadLocalRandom.current().nextInt(0, 255);
+        circle.setG(g);
         int b = ThreadLocalRandom.current().nextInt(0, 255);
-        return Circle.builder()
-                .xCoordinate(x)
-                .yCoordinate(y)
-                .radius(radius)
-                .r(r)
-                .g(g)
-                .b(b)
-                .build();
+        circle.setB(b);
+        return circle;
     }
 
 }

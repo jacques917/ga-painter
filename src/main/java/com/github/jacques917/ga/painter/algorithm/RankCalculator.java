@@ -3,6 +3,7 @@ package com.github.jacques917.ga.painter.algorithm;
 import com.google.inject.Singleton;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
+import io.vavr.Tuple3;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
@@ -14,39 +15,28 @@ import java.util.stream.IntStream;
 @Singleton
 class RankCalculator {
 
-    double calculateRank(Image targetImage, Image phenotypeRepresentation) {
-        checkIfDimensionsMatch(targetImage, phenotypeRepresentation);
-        int width = (int) targetImage.getWidth();
-        int height = (int) targetImage.getHeight();
-        PixelReader targetImagePixelReader = targetImage.getPixelReader();
+    long calculateRank(Color[][] colors, Image phenotypeRepresentation) {
+        int width = colors.length;
+        int height = colors[0].length;
         PixelReader phenotypeRepresentationPixelReader = phenotypeRepresentation.getPixelReader();
         return IntStream.range(0, width)
                 .boxed()
                 .flatMap(x -> IntStream.range(0, height).mapToObj(y -> Tuple.of(x, y)))
-                .map(tuple -> pixelDifference(tuple, targetImagePixelReader, phenotypeRepresentationPixelReader))
-                .mapToDouble(Double::doubleValue)
+                .map(tuple -> colorDifference(colors[tuple._1][tuple._2], phenotypeRepresentationPixelReader.getColor(tuple._1, tuple._2)))
+                .mapToLong(Long::longValue)
                 .sum();
     }
 
-    private double pixelDifference(Tuple2<Integer, Integer> coordinates, PixelReader pixelReader1, PixelReader pixelReader2) {
-        Color pixel1Color = pixelReader1.getColor(coordinates._1, coordinates._2);
-        Color pixel2Color = pixelReader2.getColor(coordinates._1, coordinates._2);
-        return colorDifference(pixel1Color, pixel2Color);
-    }
-
-    private double colorDifference(Color color1, Color color2) {
-        double diffValue = 0;
-        diffValue += Math.abs(color1.getRed() - color2.getRed());
-        diffValue += Math.abs(color1.getGreen() - color2.getGreen());
-        diffValue += Math.abs(color1.getBlue() - color2.getBlue());
+    private long colorDifference(Color color1, Color color2) {
+        long diffValue = 0;
+        diffValue += Math.abs(convert(color1.getRed()) - convert(color2.getRed()));
+        diffValue += Math.abs(convert(color1.getGreen()) - convert(color2.getGreen()));
+        diffValue += Math.abs(convert(color1.getBlue()) - convert(color2.getBlue()));
         return diffValue;
     }
 
-    private void checkIfDimensionsMatch(Image targetImage, Image phenotypeRepresentation) {
-        if (targetImage.getHeight() != phenotypeRepresentation.getHeight() ||
-                targetImage.getWidth() != phenotypeRepresentation.getWidth()) {
-            throw new RuntimeException("Dimenstions mismatch");
-        }
+    private int convert(double doubleVal) {
+        return (int) (doubleVal * 255);
     }
 
 }

@@ -47,6 +47,10 @@ public class ImagesPanelController {
         algorithmDataHolder.setSourceImage(defaultImage);
         sourceImage.setImage(defaultImage);
         currentLeader.setImage(defaultImage);
+
+        algorithmDataHolder.setSourceHeight((int)algorithmDataHolder.getSourceImage().getHeight());
+        algorithmDataHolder.setSourceWidth((int)algorithmDataHolder.getSourceImage().getWidth());
+
     }
 
     private void updateImage() {

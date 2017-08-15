@@ -1,6 +1,8 @@
 package com.github.jacques917.ga.painter.controller;
 
 import com.github.jacques917.ga.painter.events.ImageLoadedEvent;
+import com.github.jacques917.ga.painter.events.PauseAlgorithmEvent;
+import com.github.jacques917.ga.painter.events.ResetAlgorithmEvent;
 import com.github.jacques917.ga.painter.events.StartAlgorithmEvent;
 import com.github.jacques917.ga.painter.model.AlgorithmDataHolder;
 import com.google.common.eventbus.EventBus;
@@ -81,6 +83,20 @@ public class InitPanelController {
         eventBus.post(new StartAlgorithmEvent());
     }
 
+    @FXML
+    protected void resetAlgorithmButtonHandler() {
+        eventBus.post(new PauseAlgorithmEvent());
+        startAlgorithmButton.setDisable(false);
+        loadImageButton.setDisable(false);
+        populationSizeSlider.setDisable(false);
+        chromosomeCountSlider.setDisable(false);
+
+        //TODO reset
+        eventBus.post(new ResetAlgorithmEvent());
+
+
+    }
+
     private Optional<File> processSelectFileDialog(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select source image");
@@ -96,6 +112,9 @@ public class InitPanelController {
                 .map(Image::new)
                 .andThen(algorithmDataHolder::setSourceImage)
                 .onFailure(t -> new RuntimeException("Error while loading image", t));
+
+        algorithmDataHolder.setSourceHeight((int)algorithmDataHolder.getSourceImage().getHeight());
+        algorithmDataHolder.setSourceWidth((int)algorithmDataHolder.getSourceImage().getWidth());
     }
 
     private Window getCurrentWindow(ActionEvent event) {
