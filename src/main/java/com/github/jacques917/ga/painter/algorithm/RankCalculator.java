@@ -2,18 +2,19 @@ package com.github.jacques917.ga.painter.algorithm;
 
 import com.google.inject.Singleton;
 import io.vavr.Tuple;
-import io.vavr.Tuple2;
-import io.vavr.Tuple3;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.stream.IntStream;
 
-@Slf4j
 @Singleton
 class RankCalculator {
+
+    private static final Logger log = LoggerFactory.getLogger(RankCalculator.class);
+
 
     long calculateRank(Color[][] colors, Image phenotypeRepresentation) {
         int width = colors.length;

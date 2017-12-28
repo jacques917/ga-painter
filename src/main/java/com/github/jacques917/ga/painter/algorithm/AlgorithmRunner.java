@@ -5,7 +5,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,9 +16,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.Boolean.TRUE;
 
-@Slf4j
 @Singleton
 public class AlgorithmRunner {
+
+    private static final Logger log = LoggerFactory.getLogger(AlgorithmRunner.class);
 
     @Inject
     private Algorithm algorithm;

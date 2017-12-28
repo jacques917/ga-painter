@@ -17,7 +17,8 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -28,8 +29,9 @@ import java.util.Optional;
 import static java.lang.String.valueOf;
 import static java.util.Optional.ofNullable;
 
-@Slf4j
 public class InitPanelController {
+
+    private static final Logger log = LoggerFactory.getLogger(InitPanelController.class);
 
     @Inject
     private AlgorithmDataHolder algorithmDataHolder;

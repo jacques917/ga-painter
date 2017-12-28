@@ -13,12 +13,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.lang.String.valueOf;
 
-@Slf4j
 public class ControlPanelController {
+
+    private static final Logger log = LoggerFactory.getLogger(ControlPanelController.class);
 
     @Inject
     private AlgorithmDataHolder algorithmDataHolder;

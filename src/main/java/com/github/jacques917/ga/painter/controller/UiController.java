@@ -2,10 +2,12 @@ package com.github.jacques917.ga.painter.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class UiController {
+
+    private static final Logger log = LoggerFactory.getLogger(UiController.class);
 
     @FXML
     protected void handleSelectImageButtonAction(ActionEvent event) {

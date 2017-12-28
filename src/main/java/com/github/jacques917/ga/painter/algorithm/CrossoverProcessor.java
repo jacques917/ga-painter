@@ -7,7 +7,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -16,9 +17,10 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
-@Slf4j
 @Singleton
 public class CrossoverProcessor {
+
+    private static final Logger log = LoggerFactory.getLogger(CrossoverProcessor.class);
 
     @Inject
     private AlgorithmDataHolder algorithmDataHolder;

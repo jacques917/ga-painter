@@ -5,10 +5,12 @@ import com.github.jacques917.ga.painter.controller.GuiRefreshScheduler;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Binder;
 import com.google.inject.Module;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class ApplicationModule implements Module {
+
+    private static final Logger log = LoggerFactory.getLogger(ApplicationModule.class);
 
     private final EventBus mainEventBus = new EventBus("Main event bus");
 

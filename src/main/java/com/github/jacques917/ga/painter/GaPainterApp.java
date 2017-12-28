@@ -10,10 +10,12 @@ import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class GaPainterApp extends Application {
+
+    private static final Logger log = LoggerFactory.getLogger(GaPainterApp.class);
 
     private EventBus eventBus;
 

@@ -4,16 +4,18 @@ import com.github.jacques917.ga.painter.model.AlgorithmDataHolder;
 import com.github.jacques917.ga.painter.model.Phenotype;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
 
-@Slf4j
 @Singleton
 public class SelectionProcessor {
+
+    private static final Logger log = LoggerFactory.getLogger(SelectionProcessor.class);
 
     @Inject
     private AlgorithmDataHolder algorithmDataHolder;
